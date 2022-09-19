@@ -92,8 +92,7 @@ class KeyboardActions extends StatefulWidget {
       this.enable = true,
       this.autoScroll = true,
       this.isDialog = false,
-      @Deprecated('Use tapOutsideBehavior instead.')
-          this.tapOutsideToDismiss = false,
+      @Deprecated('Use tapOutsideBehavior instead.') this.tapOutsideToDismiss = false,
       this.tapOutsideBehavior = TapOutsideBehavior.none,
       required this.config,
       this.overscroll = 12.0,
@@ -106,8 +105,7 @@ class KeyboardActions extends StatefulWidget {
 }
 
 /// State class for [KeyboardActions].
-class KeyboardActionstate extends State<KeyboardActions>
-    with WidgetsBindingObserver {
+class KeyboardActionstate extends State<KeyboardActions> with WidgetsBindingObserver {
   /// The currently configured keyboard actions
   KeyboardActionsConfig? config;
 
@@ -125,10 +123,8 @@ class KeyboardActionstate extends State<KeyboardActions>
   /// If the keyboard bar is on for the current platform
   bool get _isAvailable {
     return config!.keyboardActionsPlatform == KeyboardActionsPlatform.ALL ||
-        (config!.keyboardActionsPlatform == KeyboardActionsPlatform.IOS &&
-            PlatformCheck.isIOS) ||
-        (config!.keyboardActionsPlatform == KeyboardActionsPlatform.ANDROID &&
-            PlatformCheck.isAndroid);
+        (config!.keyboardActionsPlatform == KeyboardActionsPlatform.IOS && PlatformCheck.isIOS) ||
+        (config!.keyboardActionsPlatform == KeyboardActionsPlatform.ANDROID && PlatformCheck.isAndroid);
   }
 
   /// If we are currently showing the keyboard bar
@@ -154,8 +150,7 @@ class KeyboardActionstate extends State<KeyboardActions>
   /// Used to correctly calculate the offset to "avoid" with BottomAreaAvoider.
   double get _distanceBelowWidget {
     if (_keyParent.currentContext != null) {
-      final widgetRenderBox =
-          _keyParent.currentContext!.findRenderObject() as RenderBox;
+      final widgetRenderBox = _keyParent.currentContext!.findRenderObject() as RenderBox;
       final fullHeight = MediaQuery.of(context).size.height;
       final widgetHeight = widgetRenderBox.size.height;
       final widgetTop = widgetRenderBox.localToGlobal(Offset.zero).dy;
@@ -216,8 +211,7 @@ class KeyboardActionstate extends State<KeyboardActions>
     //remove focus for unselected fields
     _map.keys.forEach((key) {
       final currentAction = _map[key]!;
-      if (currentAction == _currentAction &&
-          currentAction.footerBuilder != null) {
+      if (currentAction == _currentAction && currentAction.footerBuilder != null) {
         _dismissAnimationNeeded = false;
       }
       if (currentAction != _currentAction) {
@@ -310,13 +304,11 @@ class KeyboardActionstate extends State<KeyboardActions>
   }
 
   void _startListeningFocus() {
-    _map.values
-        .forEach((action) => action.focusNode.addListener(_focusNodeListener));
+    _map.values.forEach((action) => action.focusNode.addListener(_focusNodeListener));
   }
 
   void _dismissListeningFocus() {
-    _map.values.forEach(
-        (action) => action.focusNode.removeListener(_focusNodeListener));
+    _map.values.forEach((action) => action.focusNode.removeListener(_focusNodeListener));
   }
 
   bool _inserted = false;
@@ -331,9 +323,7 @@ class KeyboardActionstate extends State<KeyboardActions>
     _inserted = true;
     _overlayEntry = OverlayEntry(builder: (context) {
       // Update and build footer, if any
-      _currentFooter = (_currentAction!.footerBuilder != null)
-          ? _currentAction!.footerBuilder!(context)
-          : null;
+      _currentFooter = (_currentAction!.footerBuilder != null) ? _currentAction!.footerBuilder!(context) : null;
 
       final queryData = MediaQuery.of(context);
       return Stack(
@@ -345,13 +335,11 @@ class KeyboardActionstate extends State<KeyboardActions>
               child: Listener(
                 onPointerDown: (event) {
                   if (!widget.keepFocusOnTappingNode ||
-                      _currentAction?.focusNode.rect.contains(event.position) !=
-                          true) {
+                      _currentAction?.focusNode.rect.contains(event.position) != true) {
                     _clearFocus();
                   }
                 },
-                behavior: widget.tapOutsideBehavior ==
-                        TapOutsideBehavior.translucentDismiss
+                behavior: widget.tapOutsideBehavior == TapOutsideBehavior.translucentDismiss
                     ? HitTestBehavior.translucent
                     : HitTestBehavior.opaque,
               ),
@@ -366,14 +354,12 @@ class KeyboardActionstate extends State<KeyboardActions>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  if (_currentAction!.displayActionBar)
-                    _buildBar(_currentAction!.displayArrows),
+                  if (_currentAction!.displayActionBar) _buildBar(_currentAction!.displayArrows),
                   if (_currentFooter != null)
                     AnimatedContainer(
                       duration: _timeToDismiss,
                       child: _currentFooter,
-                      height:
-                          _inserted ? _currentFooter!.preferredSize.height : 0,
+                      height: _inserted ? _currentFooter!.preferredSize.height : 0,
                     ),
                 ],
               ),
@@ -417,20 +403,16 @@ class KeyboardActionstate extends State<KeyboardActions>
       return;
     }
 
-    double newOffset = _currentAction!.displayActionBar
-        ? _kBarSize
-        : 0; // offset for the actions bar
+    double newOffset = _currentAction!.displayActionBar ? _kBarSize : 0; // offset for the actions bar
 
     final keyboardHeight = EdgeInsets.fromWindowPadding(
-            WidgetsBinding.instance.window.viewInsets,
-            WidgetsBinding.instance.window.devicePixelRatio)
+            WidgetsBinding.instance.window.viewInsets, WidgetsBinding.instance.window.devicePixelRatio)
         .bottom;
 
     newOffset += keyboardHeight; // + offset for the system keyboard
 
     if (_currentFooter != null) {
-      newOffset +=
-          _currentFooter!.preferredSize.height; // + offset for the footer
+      newOffset += _currentFooter!.preferredSize.height; // + offset for the footer
     }
 
     newOffset -= _localMargin + _distanceBelowWidget;
@@ -449,8 +431,7 @@ class KeyboardActionstate extends State<KeyboardActions>
 
   void _onLayout() {
     if (widget.isDialog) {
-      final render =
-          _keyParent.currentContext?.findRenderObject() as RenderBox?;
+      final render = _keyParent.currentContext?.findRenderObject() as RenderBox?;
       final fullHeight = MediaQuery.of(context).size.height;
       final localHeight = render?.size.height ?? 0;
       _localMargin = (fullHeight - localHeight) / 2;
@@ -507,8 +488,7 @@ class KeyboardActionstate extends State<KeyboardActions>
   Widget _buildBar(bool displayArrows) {
     return AnimatedCrossFade(
       duration: _timeToDismiss,
-      crossFadeState:
-          _isShowing ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      crossFadeState: _isShowing ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       firstChild: Container(
         height: _kBarSize,
         width: MediaQuery.of(context).size.width,
@@ -524,8 +504,7 @@ class KeyboardActionstate extends State<KeyboardActions>
           top: false,
           bottom: false,
           child: Row(
-            mainAxisAlignment:
-                _currentAction?.toolbarAlignment ?? MainAxisAlignment.end,
+            mainAxisAlignment: _currentAction?.toolbarAlignment ?? MainAxisAlignment.end,
             children: [
               if (config!.nextFocus && displayArrows) ...[
                 IconButton(
@@ -548,8 +527,7 @@ class KeyboardActionstate extends State<KeyboardActions>
               ],
               if (_currentAction?.displayDoneButton != null &&
                   _currentAction!.displayDoneButton &&
-                  (_currentAction!.toolbarButtons == null ||
-                      _currentAction!.toolbarButtons!.isEmpty))
+                  (_currentAction!.toolbarButtons == null || _currentAction!.toolbarButtons!.isEmpty))
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: InkWell(
@@ -557,11 +535,9 @@ class KeyboardActionstate extends State<KeyboardActions>
                       if (_currentAction?.onTapAction != null) {
                         _currentAction!.onTapAction!();
                       }
-                      _clearFocus();
                     },
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                       child: config?.defaultDoneWidget ??
                           Text(
                             "Done",
@@ -574,9 +550,7 @@ class KeyboardActionstate extends State<KeyboardActions>
                   ),
                 ),
               if (_currentAction?.toolbarButtons != null)
-                ..._currentAction!.toolbarButtons!
-                    .map((item) => item(_currentAction!.focusNode))
-                    .toList()
+                ..._currentAction!.toolbarButtons!.map((item) => item(_currentAction!.focusNode)).toList()
             ],
           ),
         ),
@@ -585,8 +559,7 @@ class KeyboardActionstate extends State<KeyboardActions>
     );
   }
 
-  final GlobalKey<BottomAreaAvoiderState> bottomAreaAvoiderKey =
-      GlobalKey<BottomAreaAvoiderState>();
+  final GlobalKey<BottomAreaAvoiderState> bottomAreaAvoiderKey = GlobalKey<BottomAreaAvoiderState>();
 
   @override
   Widget build(BuildContext context) {
@@ -610,9 +583,7 @@ class KeyboardActionstate extends State<KeyboardActions>
                 key: bottomAreaAvoiderKey,
                 areaToAvoid: _offset,
                 overscroll: widget.overscroll,
-                duration: Duration(
-                    milliseconds:
-                        (_timeToDismiss.inMilliseconds * 1.8).toInt()),
+                duration: Duration(milliseconds: (_timeToDismiss.inMilliseconds * 1.8).toInt()),
                 autoScroll: widget.autoScroll,
                 physics: widget.bottomAvoiderScrollPhysics,
                 child: widget.child,
